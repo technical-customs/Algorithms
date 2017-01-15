@@ -1,4 +1,4 @@
-class Heap{
+class Heap<T extends Comparable<T>>{
     /**
      * Required Expressions:
      * (index - 1)/2 (parent node)
@@ -14,15 +14,15 @@ class Heap{
      */
     
     private int size = 0;
-    public Node<Integer>[] heap = new Node[8];
+    public Node<T>[] heap = new Node[8];
     public Heap(){}
     
-    public void add(int value){
+    public void add(T value){
         heap[size] = new Node(value);
         size += 1;
         minheapify();
     }
-    public boolean remove(int value){
+    public boolean remove(T value){
         int index = findindex(heap, value);
         int left = 2 * index + 1;
         int right = 2 * index + 2;
@@ -34,8 +34,8 @@ class Heap{
         heap[index] = null;
         heap[index] = heap[size];
         
-        while(left < size && (heap[index].getValue() > heap[left].getValue() || heap[index].getValue() > heap[right].getValue()) ){
-            if(heap[left].getValue() < heap[right].getValue()){
+        while(left < size && (heap[index].getValue().compareTo(heap[left].getValue()) > 0 || heap[index].getValue().compareTo(heap[right].getValue()) > 0) ){
+            if(heap[left].getValue().compareTo(heap[right].getValue()) < 0){
                 swap(heap[right], heap[index]);
                 index = right;
             }
@@ -43,11 +43,11 @@ class Heap{
         
         return true;
     }
-    private int findindex(Node<Integer>[] heap, int value){
+    private int findindex(Node<T>[] heap, T value){
         if(size <= 0){
             
         }
-        for(Node<Integer> n: heap){
+        for(Node<T> n: heap){
             if(n.getValue() == value){
                 return n.getIndex();
             }
@@ -57,7 +57,7 @@ class Heap{
     public void minheapify(){
         int i = size - 1;
         
-        while(i > 0 && heap[i].getValue() < heap[(i-1)/2].getValue()){
+        while(i > 0 && heap[i].getValue().compareTo(heap[(i-1)/2].getValue()) < 0){
             swap(heap[i], heap[(i-1)/2]);
             i = (i - 1)/2;
         }
@@ -65,7 +65,7 @@ class Heap{
     public void maxheapify(){
         int i = size - 1;
         
-        while(i > 0 && heap[i].getValue() > heap[(i-1)/2].getValue()){
+        while(i > 0 && heap[i].getValue().compareTo(heap[(i-1)/2].getValue()) > 0){
             swap(heap[i], heap[(i-1)/2]);
             i = (i - 1)/2;
         }
@@ -74,11 +74,13 @@ class Heap{
     public int getSize(){
         return this.size;
     }
-    private void swap(Node<Integer> nodea, Node<Integer> nodeb){
+    private void swap(Node<T> nodea, Node<T> nodeb){
         //swap index portion, need to swap position in heap
         int ti = nodea.getIndex();
         nodea.setIndex(nodeb.getIndex());
         nodeb.setIndex(ti);
+        
+        //heap[nodea] = heap[nodeb];
         
     }
     public static void main(String[] args){

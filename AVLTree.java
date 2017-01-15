@@ -1,8 +1,9 @@
 
 import java.util.LinkedList;
 import java.util.Queue;
+import java.util.Stack;
 
-class AVLTree<T>{
+class AVLTree<T extends Comparable<T>>{
     /**
      * Binary tree with self balancing properties
      * Run Times: all O(logn)
@@ -11,17 +12,67 @@ class AVLTree<T>{
     Node<T> root = null;
     int count = 0;
     
-    public Node<T> getRoot(){
+    public Node getRoot(){
         return this.root;
     }
     
-    public boolean contains(Node<Integer> root, int value){
+    public void add(T value){
+        if(root == null){
+            root = new Node(value);
+        }else{
+            insertnode(root,value);
+        }
+        count += 1;
+    }
+    public void insertnode(Node node,T value){
+        if(node.getValue().compareTo(value) > 0){
+            if(node.getLeftChild() == null){
+                node.setLeftChild(new Node(value));
+            }else{
+                insertnode(node.getLeftChild(),value);
+            }
+        }else{
+            if(node.getRightChild() == null){
+                node.setRightChild(new Node(value));
+            }else{
+                insertnode(node.getRightChild(),value);
+            }
+        }
+        checkBalance(node);
+    }
+    public boolean remove(T value){
+        Node nodeToRemove = root;
+        Node parent = null;
+        Stack path = new Stack();
+        path.add(root);
+        
+        while(nodeToRemove != null && nodeToRemove.getValue() == value){
+            parent = nodeToRemove;
+            
+            if(nodeToRemove.getValue().compareTo(value) > 0){
+                nodeToRemove = nodeToRemove.getLeftChild();
+            }else{
+                nodeToRemove = nodeToRemove.getRightChild();
+            }
+            path.push(nodeToRemove);
+        }
+        
+        if(nodeToRemove == null){
+            return false;
+        }
+        
+        
+        
+        
+        return true;
+    }
+    public boolean contains(Node root, T value){
         if(root == null){
             return false;
         }
-        if((int)root.getValue() == (int)value){
+        if(root.getValue() == value){
             return true;
-        }else if(value < root.getValue()){
+        }else if(root.getValue().compareTo(value) > 0){
             return contains(root.getLeftChild(), value);
         }else{
             return contains(root.getRightChild(), value);
@@ -31,16 +82,15 @@ class AVLTree<T>{
     
     private void checkBalance(Node<T> node){
         int lh = -1, rh = -1;
-        //calculateHeight(node);
+        calculateHeight(node);
         
         lh = (node.getLeftChild() != null) ? calculateHeight(node.getLeftChild()) : -1;
         rh = (node.getRightChild() != null) ? calculateHeight(node.getRightChild()) : -1;
         
         System.out.println("LH - " + lh + " RH - " + rh);
         System.out.println("Dif: " + (lh - rh));
-        int dif = (lh - rh);
         
-        if(dif > 1){
+        if((lh - rh) > 0){
             //left child is bigger
             System.out.println("Left Side Bigger");
             
@@ -63,7 +113,7 @@ class AVLTree<T>{
                 System.out.println("Left Right Rotation");
                 leftRightRotation(node);
             }
-        }else if(dif < -1){
+        }else if((lh - rh) < 0){
             //right child is bigger
             System.out.println("Right Side Bigger");
             
@@ -78,9 +128,18 @@ class AVLTree<T>{
             rr = (node.getRightChild().getRightChild() != null) ? calculateHeight(node.getRightChild().getRightChild()): -1;
             
             if(rl - rr < 0){
+                System.out.println("Left Rotation");
+                
                 leftRotation(node);
             }else{
-                
+                System.out.println("Right Left Rotation");
+                rightLeftRotation(node);
+            }
+        }else if((lh - rh) == 0){
+            //trees are balanced
+            if(lh != -1 && rh != -1){
+                checkBalance(node.getLeftChild());
+                checkBalance(node.getRightChild());
             }
         }
     }
@@ -132,43 +191,53 @@ class AVLTree<T>{
         return node.getHeight();
     }
     
-    private void leftRotation(Node<T> node){
+    private Node<T> leftRotation(Node<T> node){
         //nodes right child becomes parent, node becomes left child of right child
+        //returns root
         if(node.getRightChild() == null){
-            return;
+            return null;
         }
         
         Node<T> rightnode = node.getRightChild();
-        if(rightnode.getLeftChild() != null){
-            //if rightnode has a left child, set it to nodes right child
-            node.setRightChild(rightnode.getLeftChild());
-        }
+        node.setRightChild(rightnode.getLeftChild());
         rightnode.setLeftChild(node);
+        
+        calculateHeight(node);
+        calculateHeight(rightnode);
+        
+        return rightnode;
     }
-    private void rightRotation(Node<T> node){
+    private Node<T> rightRotation(Node<T> node){
+        //returns root
         if(node.getLeftChild() == null){
-            return;
+            return null;
         }
+        
         Node<T> leftnode = node.getLeftChild();
-        if(leftnode.getRightChild() != null){
-            //if leftnode has a right child, set it to nodes left child
-            node.setLeftChild(leftnode.getRightChild());
-        }
+        node.setLeftChild(leftnode.getRightChild());
         leftnode.setRightChild(node);
+        
+        calculateHeight(node);
+        calculateHeight(leftnode);
+        
+        return leftnode;
     }
+    
     private void leftRightRotation(Node<T> node){
         if(node.getLeftChild() == null){
             return;
         }
-        leftRotation(node.getLeftChild());
-        rightRotation(node);
+        Node<T> leftnode = node.getLeftChild();
+        leftnode.setRightChild(rightRotation(leftnode.getRightChild()));
+        node.setLeftChild(leftRotation(leftnode));
     }
     private void rightLeftRotation(Node<T> node){
         if(node.getRightChild() == null){
             return;
         }
-        rightRotation(node.getRightChild());
-        leftRotation(node);
+        Node<T> rightnode = node.getRightChild();
+        rightnode.setLeftChild(leftRotation(rightnode.getLeftChild()));
+        node.setRightChild(rightRotation(rightnode));
     }
     
     public void searchpreorder(Node<Integer> root){
@@ -261,17 +330,23 @@ class AVLTree<T>{
     
     public static void main(String[] args){
         AVLTree<String> avltree = new AVLTree<>();
-        Node n1 = new Node<>("Node 1");
+        Node n1 = new Node<>("8");
         
-        Node<String> n2 = new Node<>("Node 2");
-        Node<String> n3 = new Node<>("Node 3");
-        Node<String> n4 = new Node<>("Node 4");
-        Node<String> n5 = new Node<>("Node 5");
+        Node<String> n2 = new Node<>("4");
+        Node<String> n3 = new Node<>("18");
+        Node<String> n4 = new Node<>("6");
+        Node<String> n5 = new Node<>("5");
+        Node<String> n6 = new Node<>("Node 6");
+        Node<String> n7 = new Node<>("Node 7");
+        Node<String> n8 = new Node<>("Node 8");
         
         n1.setLeftChild(n2);
         n1.setRightChild(n3);
         n2.setRightChild(n4);
         n4.setLeftChild(n5);
+        
+        n6.setLeftChild(n7);
+        n7.setLeftChild(n8);
         
         avltree.calculateHeight(n1);
         avltree.calculateHeight(n2);
@@ -279,8 +354,34 @@ class AVLTree<T>{
         avltree.calculateHeight(n4);
         avltree.calculateHeight(n5);
         
+        //
+        //*
+        System.out.println("8: lc - " + n1.getLeftChild() + " rc - " + n1.getRightChild());
+        System.out.println("4: lc - " + n2.getLeftChild() + " rc - " + n2.getRightChild());
+        System.out.println("18: lc - " + n3.getLeftChild() + " rc - " + n3.getRightChild());
+        System.out.println("6: lc - " + n4.getLeftChild() + " rc - " + n4.getRightChild());
+        System.out.println("5: lc - " + n5.getLeftChild() + " rc - " + n5.getRightChild());
+        
         avltree.checkBalance(n1);
         
-        //System.out.println(n1.getHeight());
+        
+        System.out.println("8: lc - " + n1.getLeftChild() + " rc - " + n1.getRightChild());
+        System.out.println("4: lc - " + n2.getLeftChild() + " rc - " + n2.getRightChild());
+        System.out.println("18: lc - " + n3.getLeftChild() + " rc - " + n3.getRightChild());
+        System.out.println("6: lc - " + n4.getLeftChild() + " rc - " + n4.getRightChild());
+        System.out.println("5: lc - " + n5.getLeftChild() + " rc - " + n5.getRightChild());
+        //*/
+        
+        /*
+        System.out.println("N6: lc - " + n6.getLeftChild() + " rc - " + n6.getRightChild());
+        System.out.println("N7: lc - " + n7.getLeftChild() + " rc - " + n7.getRightChild());
+        System.out.println("N8: lc - " + n8.getLeftChild() + " rc - " + n8.getRightChild());
+        
+        avltree.checkBalance(n6);
+        
+        System.out.println("N6: lc - " + n6.getLeftChild() + " rc - " + n6.getRightChild());
+        System.out.println("N7: lc - " + n7.getLeftChild() + " rc - " + n7.getRightChild());
+        System.out.println("N8: lc - " + n8.getLeftChild() + " rc - " + n8.getRightChild());
+        */
     }
 }

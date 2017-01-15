@@ -1,4 +1,4 @@
-class Node<T>{
+class Node<T extends Comparable<T>> implements Comparable<T>{
     /*
     * Node for Linked Lists, Search Trees,
     */
@@ -8,6 +8,7 @@ class Node<T>{
     private Node<T> next = null;
     private int index;
     private int height;
+    public int balance;
     private Node<T> parent = null;
     private Node<T> leftChild = null;
     private Node<T> rightChild = null;
@@ -16,7 +17,11 @@ class Node<T>{
     public Node(T value){
         this.value = value;
     }
-    
+    @Override
+    public int compareTo(T data)
+    {
+        return data.compareTo(data);
+    }
     
     public void setValue(T value){
         this.value = value;
@@ -64,14 +69,14 @@ class Node<T>{
     }
     public void setLeftChild(Node<T> leftChild){
         this.leftChild = leftChild;
-        leftChild.setParent(this);
+        //leftChild.setParent(this);
     }
     public Node<T> getLeftChild(){
         return this.leftChild;
     }
     public void setRightChild(Node<T> rightChild){
         this.rightChild = rightChild;
-        rightChild.setParent(this);
+        //rightChild.setParent(this);
     }
     public Node<T> getRightChild(){
         return this.rightChild;

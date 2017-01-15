@@ -1,4 +1,4 @@
-class SinglyLinkedList<T>{
+class SinglyLinkedList<T extends Comparable<T>>{
     /*
     * Singly Linked List - Nodes connect to each other with next ref.
     *

@@ -1,7 +1,7 @@
 import java.util.LinkedList;
 import java.util.Queue;
 
-class BinarySearchTree{
+class BinarySearchTree<T extends Comparable<T>>{
     /*
     * Binary Search Tree - Left subtree contains nodes of smaller value
     *                      Right subtree contains nodes of equal/greater value
@@ -13,14 +13,14 @@ class BinarySearchTree{
     *
     
     */
-    private Node<Integer> root = null;
+    private Node<T> root = null;
     private int count = 0;
     
     public BinarySearchTree(){}
-    public Node<Integer> getRoot(){
+    public Node<T> getRoot(){
         return root;
     }
-    public void add(int value){
+    public void add(T value){
         if(root == null){
             root = new Node<>(value);
         }else{
@@ -28,8 +28,8 @@ class BinarySearchTree{
         }
         count += 1;
     }
-    public void insertnode(Node<Integer> curr, int value){
-        if((int)value < (int)curr.getValue()){
+    public void insertnode(Node<T> curr, T value){
+        if(curr.getValue().compareTo(value) > 0){
             if(curr.getLeftChild() == null){
                 curr.setLeftChild(new Node<>(value));
             }else{
@@ -43,50 +43,50 @@ class BinarySearchTree{
             }
         }
     }
-    public boolean contains(Node<Integer> root, int value){
+    public boolean contains(Node<T> root, T value){
         if(root == null){
             return false;
         }
-        if((int)root.getValue() == (int)value){
+        if(root.getValue() == value){
             return true;
-        }else if(value < root.getValue()){
+        }else if(root.getValue().compareTo(value) > 0){
             return contains(root.getLeftChild(), value);
         }else{
             return contains(root.getRightChild(), value);
         }
     }
-    public boolean remove(int value){
-        Node<Integer> node = findnode(root, value);
+    public boolean remove(T value){
+        Node<T> node = findnode(root, value);
         if(node == null){
             return false;
         }
-        Node<Integer> parent = findparent(root, value);
+        Node<T> parent = findparent(root, value);
         if(count == 1){
             root = null; //only node
             count = 0;
         }else if(node.getLeftChild() == null && node.getRightChild() == null){
-            if(node.getValue() < parent.getValue()){
+            if(node.getValue().compareTo(parent.getValue()) < 0){
                 parent.setLeftChild(null);
             }else{
                 parent.setRightChild(null);
             }
         }
         else if(node.getLeftChild() == null && node.getRightChild() != null){
-            if(node.getValue() < parent.getValue()){
+            if(node.getValue().compareTo(parent.getValue()) < 0){
                 parent.setLeftChild(node.getRightChild());
             }else{
                 parent.setRightChild(node.getRightChild());
             }
         }
         else if(node.getLeftChild() != null && node.getRightChild() == null){
-            if(node.getValue() < parent.getValue()){
+            if(node.getValue().compareTo(parent.getValue()) < 0){
                 parent.setLeftChild(node.getLeftChild());
             }else{
                 parent.setRightChild(node.getLeftChild());
             }
         }
         else{
-            Node<Integer> largest = node.getLeftChild();
+            Node<T> largest = node.getLeftChild();
             while(largest.getRightChild() != null){
                 largest = largest.getRightChild();
             }
@@ -97,29 +97,29 @@ class BinarySearchTree{
         return true;
     }
     
-    public void searchpreorder(Node<Integer> root){
+    public void searchpreorder(Node<T> root){
         if(root != null){
             System.out.println("Value: " + root.getValue());
             searchpreorder(root.getLeftChild());
             searchpreorder(root.getRightChild());
         }
     }
-    public void searchpostorder(Node<Integer> root){
+    public void searchpostorder(Node<T> root){
         if(root != null){
             searchpostorder(root.getLeftChild());
             searchpostorder(root.getRightChild());
             System.out.println("Value: " + root.getValue());
         }
     }
-    public void searchinorder(Node<Integer> root){
+    public void searchinorder(Node<T> root){
         if(root != null){
             searchinorder(root.getLeftChild());
             System.out.println("Value: " + root.getValue());
             searchinorder(root.getRightChild());
         }
     }
-    public void seachbreadthfirst(Node<Integer> root){
-        Queue<Node<Integer>> q = new LinkedList<>();
+    public void seachbreadthfirst(Node<T> root){
+        Queue<Node<T>> q = new LinkedList<>();
         while(root != null){
             System.out.println("Value: " + root.getValue());
             if(root.getLeftChild() != null){
@@ -137,23 +137,23 @@ class BinarySearchTree{
         }
     }
     
-    private Node<Integer> findnode(Node<Integer> root, int value){
+    private Node<T> findnode(Node<T> root, T value){
         if(root == null){
             return null;
         }
         if(root.getValue() == value){
             return root;
-        }else if(value < root.getValue()){
+        }else if(root.getValue().compareTo(value) > 0){
             return findnode(root.getLeftChild(), value);
         }else{
             return findnode(root.getRightChild(), value);
         }
     }
-    private Node<Integer> findparent(Node<Integer> root, int value){
+    private Node<T> findparent(Node<T> root, T value){
         if(value == root.getValue()){
             return null;
         }
-        if(value < root.getValue()){
+        if(root.getValue().compareTo(value) > 0){
             if(root.getLeftChild() == null){
                 return null;
             }else if(root.getLeftChild().getValue() == value){

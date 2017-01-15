@@ -1,4 +1,4 @@
-class DoublyLinkedList<T>{
+class DoublyLinkedList<T extends Comparable<T>>{
     /*
     * Doubly Linked List - Nodes connect to each other with prev and next ref
     *
