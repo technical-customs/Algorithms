@@ -1,3 +1,5 @@
+package algorithms;
+
 class InsertionSort{
     /**
      * Picks one array element and places into already sorted subarray

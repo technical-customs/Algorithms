@@ -1,4 +1,6 @@
-class SinglyLinkedList<T extends Comparable<T>>{
+package algorithms;
+
+public class SinglyLinkedList<T extends Comparable<T>>{
     /*
     * Singly Linked List - Nodes connect to each other with next ref.
     *
@@ -89,6 +91,12 @@ class SinglyLinkedList<T extends Comparable<T>>{
     }
     public int getSize(){
         return this.size;
+    }
+    public Node<T> getHead(){
+        return this.head;
+    }
+    public Node<T> getTail(){
+        return this.tail;
     }
     
     public static void main(String[] args){

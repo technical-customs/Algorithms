@@ -1,3 +1,5 @@
+package algorithms;
+
 class BubbleSort{
     /**
      * In place comparison sort, compares adjacent values and swaps

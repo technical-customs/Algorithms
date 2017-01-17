@@ -1,3 +1,5 @@
+package algorithms;
+
 import java.util.LinkedList;
 import java.util.Queue;
 
@@ -30,6 +32,7 @@ class BinarySearchTree<T extends Comparable<T>>{
     }
     public void insertnode(Node<T> curr, T value){
         if(curr.getValue().compareTo(value) > 0){
+            //if curr value is greater than than value
             if(curr.getLeftChild() == null){
                 curr.setLeftChild(new Node<>(value));
             }else{
@@ -97,6 +100,12 @@ class BinarySearchTree<T extends Comparable<T>>{
         return true;
     }
     
+    public void searchpreorder(){
+        if(root != null){
+            searchpreorder(root);
+        } 
+        
+    }
     public void searchpreorder(Node<T> root){
         if(root != null){
             System.out.println("Value: " + root.getValue());
@@ -104,12 +113,24 @@ class BinarySearchTree<T extends Comparable<T>>{
             searchpreorder(root.getRightChild());
         }
     }
+    public void searchpostorder(){
+        if(root != null){
+            searchpostorder(root);
+        } 
+        
+    }
     public void searchpostorder(Node<T> root){
         if(root != null){
             searchpostorder(root.getLeftChild());
             searchpostorder(root.getRightChild());
             System.out.println("Value: " + root.getValue());
         }
+    }
+    public void searchinorder(){
+        if(root != null){
+            searchinorder(root);
+        } 
+        
     }
     public void searchinorder(Node<T> root){
         if(root != null){
@@ -171,13 +192,13 @@ class BinarySearchTree<T extends Comparable<T>>{
             }
         }
     }
-    private int findmin(Node<Integer> root){
+    private T findmin(Node<T> root){
         if(root.getLeftChild() == null){
             return root.getValue();
         }
         return findmin(root.getLeftChild());
     }
-    private int findmax(Node<Integer> root){
+    private T findmax(Node<T> root){
         if(root.getRightChild() == null){
             return root.getValue();
         }

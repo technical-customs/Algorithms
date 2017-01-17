@@ -1,4 +1,6 @@
-class Node<T extends Comparable<T>> implements Comparable<T>{
+package algorithms;
+
+public class Node<T extends Comparable<T>>{
     /*
     * Node for Linked Lists, Search Trees,
     */
@@ -17,11 +19,7 @@ class Node<T extends Comparable<T>> implements Comparable<T>{
     public Node(T value){
         this.value = value;
     }
-    @Override
-    public int compareTo(T data)
-    {
-        return data.compareTo(data);
-    }
+    
     
     public void setValue(T value){
         this.value = value;
@@ -89,4 +87,6 @@ class Node<T extends Comparable<T>> implements Comparable<T>{
     public static void main(String[] args){
         
     }
+
+    
 }

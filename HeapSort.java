@@ -1,3 +1,5 @@
+package algorithms;
+
 class HeapSort{
     /**
      * In place comparison sort

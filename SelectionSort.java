@@ -1,3 +1,5 @@
+package algorithms;
+
 class SelectionSort{
     /**
      * In place comparison sort, divides array in two: sorted and to be sorted

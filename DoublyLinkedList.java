@@ -1,3 +1,5 @@
+package algorithms;
+
 class DoublyLinkedList<T extends Comparable<T>>{
     /*
     * Doubly Linked List - Nodes connect to each other with prev and next ref
@@ -93,6 +95,12 @@ class DoublyLinkedList<T extends Comparable<T>>{
     }
     public int getSize(){
         return this.size;
+    }
+    public Node<T> getHead(){
+        return this.head;
+    }
+    public Node<T> getTail(){
+        return this.tail;
     }
     
     public static void main(String[] args){
