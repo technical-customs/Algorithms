@@ -16,13 +16,26 @@ class Heap<T extends Comparable<T>>{
      */
     
     private int size = 0;
-    public Node<T>[] heap = new Node[8];
+    public T[] heap = (T[]) new Comparable[8];
+    private boolean min = true;
     public Heap(){}
+    public Heap(boolean min){ this.min = min;}
+    public Heap(int min){
+        if(min > 0){
+            this.min = false;
+        }
+    }
+    
     
     public void add(T value){
-        heap[size] = new Node(value);
+        heap[size] = value;
         size += 1;
-        minheapify();
+        if(min){
+            minheapify();
+        }else{
+            maxheapify();
+        }
+        
     }
     public boolean remove(T value){
         int index = findindex(heap, value);
@@ -36,22 +49,22 @@ class Heap<T extends Comparable<T>>{
         heap[index] = null;
         heap[index] = heap[size];
         
-        while(left < size && (heap[index].getValue().compareTo(heap[left].getValue()) > 0 || heap[index].getValue().compareTo(heap[right].getValue()) > 0) ){
-            if(heap[left].getValue().compareTo(heap[right].getValue()) < 0){
-                swap(heap[right], heap[index]);
+        while(left < size && (heap[index].compareTo(heap[left]) > 0 || heap[index].compareTo(heap[right]) > 0) ){
+            if(heap[left].compareTo(heap[right]) < 0){
+                swap(right, index);
                 index = right;
             }
         }
         
         return true;
     }
-    private int findindex(Node<T>[] heap, T value){
+    private int findindex(T[] heap, T value){
         if(size <= 0){
-            
+            return -1;
         }
-        for(Node<T> n: heap){
-            if(n.getValue() == value){
-                return n.getIndex();
+        for(int x = 0; x < heap.length; x++){
+            if(heap[x] == value){
+                return x;
             }
         }
         return -1;
@@ -59,16 +72,16 @@ class Heap<T extends Comparable<T>>{
     public void minheapify(){
         int i = size - 1;
         
-        while(i > 0 && heap[i].getValue().compareTo(heap[(i-1)/2].getValue()) < 0){
-            swap(heap[i], heap[(i-1)/2]);
+        while(i > 0 && heap[i].compareTo(heap[(i-1)/2]) < 0){
+            swap(i,(i-1)/2);
             i = (i - 1)/2;
         }
     }
     public void maxheapify(){
         int i = size - 1;
         
-        while(i > 0 && heap[i].getValue().compareTo(heap[(i-1)/2].getValue()) > 0){
-            swap(heap[i], heap[(i-1)/2]);
+        while(i > 0 && heap[i].compareTo(heap[(i-1)/2]) > 0){
+            swap(i, (i-1)/2);
             i = (i - 1)/2;
         }
     }
@@ -76,24 +89,27 @@ class Heap<T extends Comparable<T>>{
     public int getSize(){
         return this.size;
     }
-    private void swap(Node<T> nodea, Node<T> nodeb){
+    private void swap(int a, int b){
         //swap index portion, need to swap position in heap
-        int ti = nodea.getIndex();
-        nodea.setIndex(nodeb.getIndex());
-        nodeb.setIndex(ti);
+        T t = heap[a];
         
-        //heap[nodea] = heap[nodeb];
-        
+        heap[a] = heap[b];
+        heap[b] = t;
     }
     public static void main(String[] args){
         Heap heap = new Heap();
         
-        heap.add(8);
-        heap.add(5);
         heap.add(13);
+        heap.add(8);
+        //heap.add(5);
+       
         
-        for(Node<Integer> n: heap.heap){
-            System.out.println("Value: " + n.getIndex() + ". " + n.getValue());
+        int count = 0;
+        
+        
+        for(int x = 0; x < heap.heap.length; x++){
+            if(heap.heap[x] == null) continue;
+            System.out.println("Value: " + x + ". " + heap.heap[x].toString());
         }
     }
 }
