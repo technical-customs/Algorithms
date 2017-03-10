@@ -1,29 +1,28 @@
 package algorithms;
 
-import java.util.Arrays;
 import java.util.Scanner;
 
-final class BinaryConvert {
+class BinaryConvert {
     private int SETLENGTH = 8;
+    final private StringBuilder sb;
     private int[] bnums;
-    private StringBuilder sb;
-    
     private String binaryNumber;
     private int number;
     
     public BinaryConvert(){
         sb = new StringBuilder();
-        
         this.binaryNumber = null;
         this.number = -1;
     }
-    public BinaryConvert(String binaryNumber){
-        if(!convertBinary(binaryNumber)){
-            this.binaryNumber = null;
-            this.number = -1;
-        }
-    }
     
+    private int limitCount(int size){
+        int total = 0;
+        
+        for(int x = size-1; x >=0; x--){
+            total += Math.pow(2, x);
+        }
+        return total;
+    }
     public boolean convertBinary(String binaryNumber){
         if(binaryNumber == null){
             return false;
@@ -69,17 +68,13 @@ final class BinaryConvert {
         this.number = total;
         return true;
     }
-    
-    public void convertNumber(int number){
+    public boolean convertNumber(int number){
         //takes a number and makes a binary string
         if(number <= 0){
-            return;
+            return false;
         }
         
-        int num = number;
-        int minset = SETLENGTH;
-        
-        //determine multiple of 8 to use and make an array full of zeros of length
+        int num = number, minset = SETLENGTH;
         
         while(num > limitCount(minset)){
             //if num is greater than limit, increase limit
@@ -87,7 +82,6 @@ final class BinaryConvert {
         }
         
         sb.setLength(0);
-        
         bnums = new int[minset];
         
         for(int x = 0, y = bnums.length-1; x < bnums.length && y >= 0; x++, y--){
@@ -103,19 +97,12 @@ final class BinaryConvert {
             sb.append(bnums[x]);
         }
         
-        this.number = number;
         this.binaryNumber = sb.toString();
+        this.number = number;
+        return true;
     }
     
-    private int limitCount(int size){
-        int total = 0;
-        
-        for(int x = size-1; x >=0; x--){
-            total += Math.pow(2, x);
-        }
-        return total;
-    }
-    
+    //*******************GETTERS/SETTERS*******************
     public void setSetlength(int setlength){
         this.SETLENGTH = setlength;
     }
@@ -134,6 +121,7 @@ final class BinaryConvert {
         return "Binary Number: " + this.binaryNumber + '\n'
                 + "Number: " + this.number;
     }
+    
     public static void main(String[] args){
         Scanner s = new Scanner(System.in);
         
