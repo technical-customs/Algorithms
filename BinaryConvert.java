@@ -4,12 +4,16 @@ import java.util.Arrays;
 import java.util.Scanner;
 
 final class BinaryConvert {
-    // will take an 8 or less digit binary number and converts to numbered form
-    // willlater update to use more than 8 digits
+    private int SETLENGTH = 8;
+    private int[] bnums;
+    private StringBuilder sb;
+    
     private String binaryNumber;
     private int number;
     
     public BinaryConvert(){
+        sb = new StringBuilder();
+        
         this.binaryNumber = null;
         this.number = -1;
     }
@@ -25,22 +29,23 @@ final class BinaryConvert {
             return false;
         }
         
-        StringBuilder bn = new StringBuilder(binaryNumber);
+        sb.setLength(0);
+        sb.append(binaryNumber);
         
         //add zeros to front if needed
-        if(bn.length() % 8 != 0){
-            while(bn.length() % 8 != 0){
-                bn.insert(0,0);
+        if(sb.length() % SETLENGTH != 0){
+            while(sb.length() % SETLENGTH != 0){
+                sb.insert(0,0);
             }
         }
         
         //check if string is only 1s and 0s
         
-        int[] bnums = new int[bn.length()];
+        bnums = new int[sb.length()];
         
-        for(int x = 0; x < bn.length(); x++){
+        for(int x = 0; x < sb.length(); x++){
             //convert char to int
-            char bnc = bn.charAt(x);
+            char bnc = sb.charAt(x);
             String cc = bnc+"";
             int c = Integer.parseInt(cc);
             
@@ -60,7 +65,7 @@ final class BinaryConvert {
             }
         }
         
-        this.binaryNumber = bn.toString();
+        this.binaryNumber = sb.toString();
         this.number = total;
         return true;
     }
@@ -72,17 +77,18 @@ final class BinaryConvert {
         }
         
         int num = number;
-        int minset = 8;
+        int minset = SETLENGTH;
         
         //determine multiple of 8 to use and make an array full of zeros of length
         
         while(num > limitCount(minset)){
             //if num is greater than limit, increase limit
-            minset += 8;
+            minset += SETLENGTH;
         }
         
-        StringBuilder sb = new StringBuilder();
-        int[] bnums = new int[minset];
+        sb.setLength(0);
+        
+        bnums = new int[minset];
         
         for(int x = 0, y = bnums.length-1; x < bnums.length && y >= 0; x++, y--){
             bnums[x] = 0;
@@ -110,6 +116,12 @@ final class BinaryConvert {
         return total;
     }
     
+    public void setSetlength(int setlength){
+        this.SETLENGTH = setlength;
+    }
+    public int getSetlength(){
+        return SETLENGTH;
+    }
     public String getBinaryNumber(){
         return binaryNumber;
     }
